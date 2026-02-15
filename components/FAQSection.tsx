@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { FAQS } from '../constants';
+import { FAQS } from '../constants.tsx';
 
 const FAQItem: React.FC<{ faq: { question: string, answer: string } }> = ({ faq }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +15,8 @@ const FAQItem: React.FC<{ faq: { question: string, answer: string } }> = ({ faq 
         <span className="text-lg font-bold group-hover:text-purple-400 transition-colors">{faq.question}</span>
         {isOpen ? <ChevronUp className="w-5 h-5 text-purple-400" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}
       </button>
-      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-40 mb-6' : 'max-h-0'}`}>
-        <p className="text-gray-400 leading-relaxed">
+      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-80 mb-6' : 'max-h-0'}`}>
+        <p className="text-gray-400 leading-relaxed text-right">
           {faq.answer}
         </p>
       </div>

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Play, Sparkles, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { getGeminiResponse } from '../services/geminiService';
+import { getGeminiResponse } from '../services/geminiService.ts';
 
 const PromptSandbox: React.FC = () => {
   const [prompt, setPrompt] = useState('');
@@ -16,8 +16,6 @@ const PromptSandbox: React.FC = () => {
     setError(false);
     
     try {
-      // Fix: Argument of type 'false' is not assignable to parameter of type '"search" | "thinking"'.
-      // Changed the incorrect boolean argument to 'search', which is a valid mode defined in the service.
       const { text } = await getGeminiResponse(`הנה פרומפט שמשתמש כתב: "${prompt}". תן לו תוצאה קצרה של מה שהיה יוצא (כ-2 משפטים), ואז תן לו טיפ אחד איך לשפר את הפרומפט כדי שיהיה יותר מקצועי. תפריד בין התוצאה לטיפ עם המילה הספציפית: 'TIP_SPLIT_HERE'.`, [], 'search');
       
       if (text.includes('TIP_SPLIT_HERE')) {
@@ -25,7 +23,6 @@ const PromptSandbox: React.FC = () => {
         setResult(parts[0].trim());
         setFeedback(parts[1].trim());
       } else {
-        // Fallback if AI doesn't use the delimiter
         setResult(text);
         setFeedback("הפרומפט שלך מעניין! נסה להוסיף יותר הקשר (Context) כדי לקבל תוצאה טובה יותר.");
       }
