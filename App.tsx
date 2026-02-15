@@ -9,6 +9,9 @@ import AIAssistant from './components/AIAssistant.tsx';
 import PurchaseModal from './components/PurchaseModal.tsx';
 import PromptSandbox from './components/PromptSandbox.tsx';
 import VideoGallery from './components/VideoGallery.tsx';
+import ImageGenerator from './components/ImageGenerator.tsx';
+import CourseRoadmap from './components/CourseRoadmap.tsx';
+import GoogleSimulator from './components/GoogleSimulator.tsx';
 
 const App: React.FC = () => {
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
@@ -23,7 +26,7 @@ const App: React.FC = () => {
   }, [isSeniorMode]);
 
   return (
-    <div className="min-h-screen selection:bg-purple-500/50 bg-[#030712] text-white">
+    <div className="min-h-screen selection:bg-purple-500/50 bg-[#030712] text-white overflow-x-hidden">
       <Header 
         isSeniorMode={isSeniorMode} 
         onToggleSeniorMode={() => setIsSeniorMode(!isSeniorMode)} 
@@ -32,7 +35,21 @@ const App: React.FC = () => {
       <main>
         <Hero />
         
+        <section className="px-6 -mt-10 mb-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-10">
+              <span className="text-xs font-black text-gray-500 uppercase tracking-[0.3em] mb-4 block">As seen on search</span>
+              <h2 className="text-3xl font-bold">איך אנחנו נראים בגוגל?</h2>
+            </div>
+            <GoogleSimulator />
+          </div>
+        </section>
+
+        <CourseRoadmap />
+
         <PromptSandbox />
+
+        <ImageGenerator />
 
         <VideoGallery />
 

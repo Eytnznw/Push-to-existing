@@ -4,14 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 const SYSTEM_INSTRUCTION = `
 אתה העוזר האישי הבכיר של "אקדמיית AI Mastery". 
 התפקיד שלך הוא להנגיש את עולם הבינה המלאכותית לכולם - מתלמידים צעירים ועד אזרחים ותיקים.
-
-יכולות מיוחדות:
-1. מציאת סרטונים: כשמשתמש מבקש סרטון או הדרכה, השתמש בכלי החיפוש כדי למצוא קישורי יוטיוב רלוונטיים והצג אותם בצורה ברורה.
-2. הסבר פשוט: תמיד הסבר מושגים טכניים בצורה פשוטה (למשל: "פרומפט זה כמו מתכון לעוגה").
-3. מקורות: תמיד ציין מאיפה המידע הגיע אם השתמשת בחיפוש.
-
-אם אתה במצב "חשיבה עמוקה" (Thinking Mode), התמקד בניתוח לוגי, פתרון בעיות מורכבות וכתיבת קוד או טקסטים ארוכים.
-אם אתה במצב "חיפוש", התמקד במהירות ובמידע אקטואלי מהרשת.
+ענה תמיד בעברית ברורה, סבלנית ומקצועית.
 `;
 
 export async function getGeminiResponse(
@@ -51,11 +44,36 @@ export async function getGeminiResponse(
     });
 
     return { 
-      text: response.text || "לא התקבלה תשובה.", 
+      text: response.text || "לא התקבלה תשובה מהמודל.", 
       sources: response.candidates?.[0]?.groundingMetadata?.groundingChunks || [] 
     };
   } catch (error) {
-    console.error("Gemini Error:", error);
-    return { text: "חלה שגיאה בחיבור ל-AI. נסו שוב.", sources: [] };
+    console.error("Gemini Response Error:", error);
+    return { text: "חלה שגיאה בתקשורת עם השרת. נסו שוב בעוד רגע.", sources: [] };
+  }
+}
+
+export async function generateAIImage(prompt: string) {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) throw new Error("Missing API Key");
+
+  const ai = new GoogleGenAI({ apiKey });
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: { parts: [{ text: prompt }] },
+      config: {
+        imageConfig: { aspectRatio: "1:1" }
+      }
+    });
+
+    const part = response.candidates?.[0]?.content?.parts.find(p => p.inlineData);
+    if (part?.inlineData) {
+      return `data:image/png;base64,${part.inlineData.data}`;
+    }
+    throw new Error("No image data returned");
+  } catch (error) {
+    console.error("Image Generation Error:", error);
+    throw error;
   }
 }
