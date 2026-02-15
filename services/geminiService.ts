@@ -11,8 +11,14 @@ const SYSTEM_INSTRUCTION = `
 `;
 
 export async function getGeminiResponse(userPrompt: string, history: { role: 'user' | 'assistant', content: string }[], useSearch = true) {
-  // Use gemini-3-flash-preview for maximum speed (latency)
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY;
+  
+  if (!apiKey) {
+    console.warn("API Key is missing. AI features will not work.");
+    return { text: "שימו לב: מפתח ה-API חסר. יש להגדיר אותו כדי להשתמש בצ'אט.", sources: [] };
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   
   const contents = history.map(msg => ({
     role: msg.role === 'user' ? 'user' : 'model',
@@ -27,7 +33,7 @@ export async function getGeminiResponse(userPrompt: string, history: { role: 'us
   try {
     const config: any = {
       systemInstruction: SYSTEM_INSTRUCTION,
-      temperature: 0.6, // Slightly lower for more focused/faster response
+      temperature: 0.6,
     };
 
     if (useSearch) {
