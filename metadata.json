@@ -1,0 +1,7 @@
+{
+  "name": "AI Mastery Academy",
+  "description": "An elite AI course platform featuring an intelligent tutor, interactive curriculum, and cutting-edge insights.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
