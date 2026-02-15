@@ -1,10 +1,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, X, Loader2, Sparkles, AlertCircle, Volume2, Globe, RefreshCcw, Mic, MicOff } from 'lucide-react';
-import { getGeminiResponse } from '../services/geminiService';
-import { speak } from '../services/ttsService';
-import { ChatMessage } from '../types';
-import { MAX_FREE_MESSAGES } from '../constants';
+import { getGeminiResponse } from '../services/geminiService.ts';
+import { speak } from '../services/ttsService.ts';
+import { ChatMessage } from '../types.ts';
+import { MAX_FREE_MESSAGES } from '../constants.tsx';
 
 interface AIAssistantProps {
   onLimitReached: () => void;

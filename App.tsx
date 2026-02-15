@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import CourseModules from './components/CourseModules';
-import FAQSection from './components/FAQSection';
-import Footer from './components/Footer';
-import AIAssistant from './components/AIAssistant';
-import PurchaseModal from './components/PurchaseModal';
-import PromptSandbox from './components/PromptSandbox';
-import VideoGallery from './components/VideoGallery';
+import Header from './components/Header.tsx';
+import Hero from './components/Hero.tsx';
+import CourseModules from './components/CourseModules.tsx';
+import FAQSection from './components/FAQSection.tsx';
+import Footer from './components/Footer.tsx';
+import AIAssistant from './components/AIAssistant.tsx';
+import PurchaseModal from './components/PurchaseModal.tsx';
+import PromptSandbox from './components/PromptSandbox.tsx';
+import VideoGallery from './components/VideoGallery.tsx';
 
 const App: React.FC = () => {
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
