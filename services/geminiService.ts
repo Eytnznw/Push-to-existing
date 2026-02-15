@@ -20,22 +20,14 @@ export async function getGeminiResponse(
   mode: 'search' | 'thinking' = 'search'
 ) {
   const apiKey = process.env.API_KEY;
-  
-  if (!apiKey) {
-    return { text: "שגיאה: חסר מפתח API במערכת.", sources: [] };
-  }
+  if (!apiKey) return { text: "שגיאה: חסר מפתח API.", sources: [] };
 
   const ai = new GoogleGenAI({ apiKey });
-  
   const contents = history.map(msg => ({
     role: msg.role === 'user' ? 'user' : 'model',
     parts: [{ text: msg.content }]
   }));
-  
-  contents.push({
-    role: 'user',
-    parts: [{ text: userPrompt }]
-  });
+  contents.push({ role: 'user', parts: [{ text: userPrompt }] });
 
   try {
     const isThinking = mode === 'thinking';
@@ -47,10 +39,8 @@ export async function getGeminiResponse(
     };
 
     if (isThinking) {
-      // High-intelligence mode with reasoning
       config.thinkingConfig = { thinkingBudget: 32768 };
     } else {
-      // Speed and current info mode
       config.tools = [{ googleSearch: {} }];
     }
 
@@ -60,19 +50,12 @@ export async function getGeminiResponse(
       config: config,
     });
 
-    if (!response || !response.text) {
-      throw new Error("Empty response from Gemini");
-    }
-
-    const text = response.text;
-    const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-
-    return { text, sources };
-  } catch (error: any) {
-    console.error("Gemini Error:", error);
     return { 
-      text: "מצטער, הייתה לי תקלה קטנה בחיבור למוח הדיגיטלי. נסו שוב בעוד רגע.", 
-      sources: [] 
+      text: response.text || "לא התקבלה תשובה.", 
+      sources: response.candidates?.[0]?.groundingMetadata?.groundingChunks || [] 
     };
+  } catch (error) {
+    console.error("Gemini Error:", error);
+    return { text: "חלה שגיאה בחיבור ל-AI. נסו שוב.", sources: [] };
   }
 }

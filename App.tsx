@@ -23,7 +23,7 @@ const App: React.FC = () => {
   }, [isSeniorMode]);
 
   return (
-    <div className="min-h-screen selection:bg-purple-500/50">
+    <div className="min-h-screen selection:bg-purple-500/50 bg-[#030712] text-white">
       <Header 
         isSeniorMode={isSeniorMode} 
         onToggleSeniorMode={() => setIsSeniorMode(!isSeniorMode)} 
