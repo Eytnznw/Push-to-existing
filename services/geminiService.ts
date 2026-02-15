@@ -2,20 +2,27 @@
 import { GoogleGenAI } from "@google/genai";
 
 const SYSTEM_INSTRUCTION = `
-אתה עוזר אישי חכם עבור "אקדמיית AI Mastery". 
-התפקיד שלך הוא לעזור לתלמידים (מכל הגילאים, כולל מבוגרים) להבין AI.
-אם המשתמש שואל על סרטונים או הדרכות, השתמש בכלי החיפוש של גוגל כדי למצוא קישורים רלוונטיים מיוטיוב או אתרים מובילים.
-דבר בעברית פשוטה וברורה. במצב "סבתא", השתמש במשפטים קצרים מאוד והסברים ללא מונחים טכניים.
-חשוב: כשאתה מתבקש לענות בפורמט מסוים (כמו שימוש ב-TIP_SPLIT_HERE), עקוב אחריו בדיוק רב.
-תמיד תציג את המקורות (URLs) שמצאת בסוף התשובה בצורה אסתטית אם השתמשת בחיפוש.
+אתה העוזר האישי הבכיר של "אקדמיית AI Mastery". 
+התפקיד שלך הוא להנגיש את עולם הבינה המלאכותית לכולם - מתלמידים צעירים ועד אזרחים ותיקים.
+
+יכולות מיוחדות:
+1. מציאת סרטונים: כשמשתמש מבקש סרטון או הדרכה, השתמש בכלי החיפוש כדי למצוא קישורי יוטיוב רלוונטיים והצג אותם בצורה ברורה.
+2. הסבר פשוט: תמיד הסבר מושגים טכניים בצורה פשוטה (למשל: "פרומפט זה כמו מתכון לעוגה").
+3. מקורות: תמיד ציין מאיפה המידע הגיע אם השתמשת בחיפוש.
+
+אם אתה במצב "חשיבה עמוקה" (Thinking Mode), התמקד בניתוח לוגי, פתרון בעיות מורכבות וכתיבת קוד או טקסטים ארוכים.
+אם אתה במצב "חיפוש", התמקד במהירות ובמידע אקטואלי מהרשת.
 `;
 
-export async function getGeminiResponse(userPrompt: string, history: { role: 'user' | 'assistant', content: string }[], useSearch = true) {
+export async function getGeminiResponse(
+  userPrompt: string, 
+  history: { role: 'user' | 'assistant', content: string }[], 
+  mode: 'search' | 'thinking' = 'search'
+) {
   const apiKey = process.env.API_KEY;
   
   if (!apiKey) {
-    console.warn("API Key is missing. AI features will not work.");
-    return { text: "שימו לב: מפתח ה-API חסר. יש להגדיר אותו כדי להשתמש בצ'אט.", sources: [] };
+    return { text: "שגיאה: חסר מפתח API במערכת.", sources: [] };
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -31,26 +38,30 @@ export async function getGeminiResponse(userPrompt: string, history: { role: 'us
   });
 
   try {
+    const isThinking = mode === 'thinking';
+    const modelName = isThinking ? 'gemini-3-pro-preview' : 'gemini-3-flash-preview';
+    
     const config: any = {
       systemInstruction: SYSTEM_INSTRUCTION,
-      temperature: 0.6,
+      temperature: isThinking ? 1.0 : 0.7,
     };
 
-    if (useSearch) {
+    if (isThinking) {
+      // High-intelligence mode with reasoning
+      config.thinkingConfig = { thinkingBudget: 32768 };
+    } else {
+      // Speed and current info mode
       config.tools = [{ googleSearch: {} }];
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: modelName,
       contents: contents as any,
       config: config,
     });
 
     if (!response || !response.text) {
-      return { 
-        text: "מצטער, חלה שגיאה קלה. נסה שוב בעוד רגע.", 
-        sources: [] 
-      };
+      throw new Error("Empty response from Gemini");
     }
 
     const text = response.text;
@@ -59,6 +70,9 @@ export async function getGeminiResponse(userPrompt: string, history: { role: 'us
     return { text, sources };
   } catch (error: any) {
     console.error("Gemini Error:", error);
-    return { text: "חיבור האינטרנט איטי או שיש תקלה זמנית. אנא נסו שוב.", sources: [] };
+    return { 
+      text: "מצטער, הייתה לי תקלה קטנה בחיבור למוח הדיגיטלי. נסו שוב בעוד רגע.", 
+      sources: [] 
+    };
   }
 }
