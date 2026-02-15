@@ -27,7 +27,8 @@ const VideoGallery: React.FC = () => {
             <div key={video.id} className="glass group rounded-3xl overflow-hidden border border-white/5 hover:border-red-500/30 transition-all">
               <div className="aspect-video bg-gray-800 relative flex items-center justify-center overflow-hidden">
                 <img 
-                  src={`https://picsum.photos/seed/${video.id}/400/225`} 
+                  src={`https://picsum.photos/seed/${video.id}/400/225?grayscale`} 
+                  loading="lazy"
                   className="w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-500" 
                   alt={video.title} 
                 />

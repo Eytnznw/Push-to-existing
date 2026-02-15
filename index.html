@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Mastery Academy - העתיד כבר כאן</title>
+    
+    <!-- Speed optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://esm.sh" crossorigin>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -15,18 +21,18 @@
             font-family: 'Assistant', sans-serif;
             scroll-behavior: smooth;
             font-size: var(--base-font-size);
+            background-color: #030712;
         }
         .senior-mode {
             --base-font-size: 20px;
         }
         .senior-mode h1 { font-size: 4rem !important; }
         .senior-mode p { font-size: 1.5rem !important; line-height: 1.8; }
-        .senior-mode .glass { border: 2px solid rgba(255,255,255,0.3); }
-
+        
         .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .gradient-text {
             background: linear-gradient(135deg, #60a5fa, #c084fc, #f472b6);
@@ -35,14 +41,15 @@
         }
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
-        
-        /* Hide scrollbar but keep functionality */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Optimization: prevents layout shift */
+        img { content-visibility: auto; }
     </style>
     <script type="importmap">
     {

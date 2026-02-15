@@ -67,8 +67,9 @@ const App: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[80px] blur-[100px] opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
               <div className="relative z-10 w-full h-full glass rounded-[80px] border border-white/20 flex items-center justify-center p-4 overflow-hidden shadow-2xl">
                 <img 
-                   src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=1000" 
+                   src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=70&w=800" 
                    alt="AI Intelligence" 
+                   loading="lazy"
                    className="w-full h-full object-cover rounded-[60px] group-hover:scale-105 transition-transform duration-[3000ms]"
                 />
               </div>

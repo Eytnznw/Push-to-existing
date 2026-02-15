@@ -11,6 +11,7 @@ const SYSTEM_INSTRUCTION = `
 `;
 
 export async function getGeminiResponse(userPrompt: string, history: { role: 'user' | 'assistant', content: string }[], useSearch = true) {
+  // Use gemini-3-flash-preview for maximum speed (latency)
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const contents = history.map(msg => ({
@@ -26,7 +27,7 @@ export async function getGeminiResponse(userPrompt: string, history: { role: 'us
   try {
     const config: any = {
       systemInstruction: SYSTEM_INSTRUCTION,
-      temperature: 0.7,
+      temperature: 0.6, // Slightly lower for more focused/faster response
     };
 
     if (useSearch) {
@@ -34,14 +35,14 @@ export async function getGeminiResponse(userPrompt: string, history: { role: 'us
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-3-flash-preview',
       contents: contents as any,
       config: config,
     });
 
     if (!response || !response.text) {
       return { 
-        text: "מצטער, התוכן נחסם מטעמי בטיחות או שיש תקלה זמנית. נסה לשאול בצורה אחרת.", 
+        text: "מצטער, חלה שגיאה קלה. נסה שוב בעוד רגע.", 
         sources: [] 
       };
     }
@@ -52,6 +53,6 @@ export async function getGeminiResponse(userPrompt: string, history: { role: 'us
     return { text, sources };
   } catch (error: any) {
     console.error("Gemini Error:", error);
-    return { text: "הייתה תקלה בתקשורת עם השרת. אנא נסו שוב בעוד רגע.", sources: [] };
+    return { text: "חיבור האינטרנט איטי או שיש תקלה זמנית. אנא נסו שוב.", sources: [] };
   }
 }
